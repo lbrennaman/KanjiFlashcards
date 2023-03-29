@@ -2,38 +2,28 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const kanjiSlice = createSlice({
     name: 'kanji',
-    initialState: { kanjiList: ["我"] },
+    initialState: { 
+        size: 1,
+        kanjiList: ["我"],
+        kanaList: ["がのわとわれとわが"],
+        romanjiList: ["ga の wa と ware と waga"],
+        definitionList: ["I, me"],
+    },
     reducers: {
-        pushKanji: (state) => { 
-            console.log("\nPUSHING KANJI!\n-----------------");
-
-            let copy = [...state.kanjiList]; 
-            copy.push('kanji');
-            for (let element of copy) {
-                console.log("KanjiList element: ", element);
+        randomize: (state) => {
+            // Depending on state.size, read in a number of random kanji, their kana, their romanji, and their definitions
+            for (let i = 0; i < state.size; i++) {
+                console.log("TODO: push random kanji/kana/romanji/definition to respective array[" + i + "].");
             }
-            state.kanjiList = copy;
+
+            console.log("TODO: set each list to these new lists.");
         },
-        popKanji: (state) => { 
-            console.log("\nPOPPING KANJI!\n-----------------");
-
-            let copy = [...state.kanjiList]; 
-            copy.pop();
-            for (let element of copy) {
-                console.log("KanjiList element: ", element);
-            }
-            state.kanjiList = copy;
-        },
-        printKanji: (state) => { 
-            console.log("\nPRINTING KANJI!\n-----------------");
-
-            let i = 0;
-            for (let element of state.kanjiList) {
-                console.log("KanjiList[" + i + "] element: ", element);
-            }
+        setSize: (state, action) => {
+            console.log("Setting size of list to: ", action.payload);
+            state.size = action.payload;
         }
     }
 });
 
-export const { pushKanji, popKanji, printKanji } = kanjiSlice.actions;
+export const { randomize, setSize } = kanjiSlice.actions;
 export default kanjiSlice.reducer;
