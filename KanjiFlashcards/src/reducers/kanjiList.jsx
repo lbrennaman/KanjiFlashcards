@@ -4,10 +4,11 @@ export const kanjiSlice = createSlice({
     name: 'kanji',
     initialState: { 
         size: 1,
-        kanjiList: ["我"],
-        kanaList: ["がのわとわれとわが"],
+        kanjiList: ["我", "A", "B"],
+        matchList: ["がのわとわれとわが", "A", "B"],
         romanjiList: ["ga の wa と ware と waga"],
         definitionList: ["I, me"],
+        drag: null
     },
     reducers: {
         randomize: (state) => {
@@ -21,9 +22,13 @@ export const kanjiSlice = createSlice({
         setSize: (state, action) => {
             console.log("Setting size of list to: ", action.payload);
             state.size = action.payload;
+        },
+        setDrag: (state, action) => {
+            console.log("Setting drag: ", action.payload);
+            state.drag = action.payload;
         }
     }
 });
 
-export const { randomize, setSize } = kanjiSlice.actions;
+export const { randomize, setSize, setDrag } = kanjiSlice.actions;
 export default kanjiSlice.reducer;

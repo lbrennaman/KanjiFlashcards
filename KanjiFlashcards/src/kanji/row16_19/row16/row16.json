@@ -1,0 +1,566 @@
+[
+    {
+        "kanji":"亜",
+        "kana":"ア[のつぐ]",
+        "romanji":"A [no tsugu]",
+        "definition":"Asia, rank next, come after, -ous"
+    },
+    {
+        "kanji":"唖",
+        "kana":"ア[とアク]のおし",
+        "romanji":"A [to aku] no oshi",
+        "definition":"Mute, dumb"
+    },
+    {
+        "kanji":"娃",
+        "kana":"[アと]アイとワのうつくしい",
+        "romanji":"[A to] Ai to Wa no utsukushii",
+        "definition":"Beautiful"
+    },
+    {
+        "kanji":"阿",
+        "kana":"アとオのおもねる[とくま]",
+        "romanji":"A to O no Omoneru [to Kuma]",
+        "definition":"Africa, flatter, fawn upon, corner, nook, recess"
+    },
+    {
+        "kanji":"哀",
+        "kana":"アイのあわれとあわれむ[とかなしい]",
+        "romanji":"Ai no Aware to Awaremu [to Kanashii]",
+        "definition":"pathetic, grief, sorrow, pathos, pity, sympathize"
+    },
+    {
+        "kanji":"愛",
+        "kana":"アイのいとしいと[かなしいと]めでると[おしむと]まな",
+        "romanji":"Ai no Itoshii to [Kanashii to] mederu to [Oshimu to] mana",
+        "definition":"love, affection, favorite"
+    },
+    {
+        "kanji":"挨",
+        "kana":"アイ[のひらく]",
+        "romanji":"Ai [no Hiraku]",
+        "definition":"approach, draw near, push open"
+    },
+    {
+        "kanji":"姶",
+        "kana":"[アイとオウのあい]",
+        "romanji":"[Ai to Ou no Ai]",
+        "definition":"good-looking, quiet"
+    },
+    {
+        "kanji":"逢",
+        "kana":"ホウのあう[とむかえる]",
+        "romanji":"Hou no Au [to Mukaeru]",
+        "definition":"meeting, tryst, date, rendezvous"
+    },
+    {
+        "kanji":"葵",
+        "kana":"キのあおい",
+        "romanji":"Ki no Aoi",
+        "definition":"hollyhock"
+    },
+    {
+        "kanji":"茜",
+        "kana":"[センの]あかね",
+        "romanji":"[Sen no] Akane",
+        "definition":"madder, red dye, Turkey red"
+    },
+    {
+        "kanji":"穐",
+        "kana":"[シュウのあきととき]",
+        "romanji":"[Shyuu no Aki to Toki]",
+        "definition":"autumn"
+    },
+    {
+        "kanji":"悪",
+        "kana":"アクとオのあしとわるい[とにくいとにくむといずくにといずくんぞとああ]",
+        "romanji":"Aku to O no Ashi to Warui to Nikui to Nikumu to Izukuni to Izukunzo to aa",
+        "definition":"bad, vice, rascal, false, evil, wrong"
+    },
+    {
+        "kanji":"握",
+        "kana":"アクのにぎる",
+        "romanji":"Aku no Nigiru",
+        "definition":"grip, hold, mould sushi, bribe"
+    },
+    {
+        "kanji":"渥",
+        "kana":"アク[のあついとうるおう]",
+        "romanji":"Aku [no Atsui to Uruou]",
+        "definition":"kindness, moisten"
+    },
+    {
+        "kanji":"旭",
+        "kana":"キョクのあさひ",
+        "romanji":"Kyoku no Asahi",
+        "definition":"rising sun, morning sun"
+    },
+    {
+        "kanji":"葦",
+        "kana":"イのあし[とよしとしおれるとしなびるとしぼむとなえる]",
+        "romanji":"I no Ashi [to Yoshi to Shioreru to Shinabiru to Shibomu to Naeru]",
+        "definition":"reed, bullrush"
+    },
+    {
+        "kanji":"芦",
+        "kana":"ロ[のあしとよし]",
+        "romanji":"Ro no [Ashi to Yoshi]",
+        "definition":"reed, bullrush"
+    },
+    {
+        "kanji":"鯵",
+        "kana":"[ソウの]あじ",
+        "romanji":"[Sou no] Aji",
+        "definition":"horse mackerel"
+    },
+    {
+        "kanji":"梓",
+        "kana":"シのあずさ",
+        "romanji":"Shi no Azusa",
+        "definition":"catalpa tree, woodblock printing"
+    },
+    {
+        "kanji":"圧",
+        "kana":"アツとエンとオウのへす[とおすとおさえる]",
+        "romanji":"Atsu to En to Ou no Hesu [to Osu to Osaeru]",
+        "definition":"pressure, push, overwhelm, oppress, dominate"
+    },
+    {
+        "kanji":"斡",
+        "kana":"[アツとカンとワツのめぐるとめぐらす]",
+        "romanji":"[Atsu to Kan to Watsu no Meguru to Megurasu]",
+        "definition":"go around, rule, administer"
+    },
+    {
+        "kanji":"扱",
+        "kana":"[ソウとキュウの]あつかうとあつかいと[あつかると]こく",
+        "romanji":"[Sou to Kyuu no] Atsukau to Atsukai to [Atsukaru to] Koku",
+        "definition":"handle, entertain, thresh, strip"
+    },
+    {
+        "kanji":"宛",
+        "kana":"エンのあてる[とあたかも]",
+        "romanji":"En no Ateru [to Atakamo]",
+        "definition":"address, just like, fortunately"
+    },
+    {
+        "kanji":"姐",
+        "kana":"[ソとシャのあねとねえさん]",
+        "romanji":"[So to Shya no Ane to Neesan]",
+        "definition":"elder sister, maidservant"
+    },
+    {
+        "kanji":"虻",
+        "kana":"[ボウの]あぶ",
+        "romanji":"[Bou no] Abu",
+        "definition":"gadfly, horsefly"
+    },
+    {
+        "kanji":"飴",
+        "kana":"[イとシの]あめ[とやしなう]",
+        "romanji":"[I to Shi no] Ame [to Yashinau]",
+        "definition":"rice jelly, candy"
+    },
+    {
+        "kanji":"絢",
+        "kana":"ケン",
+        "romanji":"Ken",
+        "definition":"brilliant fabric design"
+    },
+    {
+        "kanji":"綾",
+        "kana":"[リンの]あや",
+        "romanji":"[Rin no] Aya",
+        "definition":"design, figured cloth, twill"
+    },
+    {
+        "kanji":"鮎",
+        "kana":"[デンとネンの]あゆ[となまず]",
+        "romanji":"[Den to Nen no] Ayu [to Namazu]",
+        "definition":"freshwater trout, smelt"
+    },
+    {
+        "kanji":"或",
+        "kana":"",
+        "romanji":"",
+        "definition":"some, one, or, possibly, a certain"
+    },
+    {
+        "kanji":"粟",
+        "kana":"",
+        "romanji":"",
+        "definition":"millet"
+    },
+    {
+        "kanji":"袷",
+        "kana":"",
+        "romanji":"",
+        "definition":"lined (kimono)"
+    },
+    {
+        "kanji":"安",
+        "kana":"",
+        "romanji":"",
+        "definition":"relax, cheap, low, quiet, rested, contented, peaceful"
+    },
+    {
+        "kanji":"庵",
+        "kana":"",
+        "romanji":"",
+        "definition":"hermitage, retreat"
+    },
+    {
+        "kanji":"按",
+        "kana":"",
+        "romanji":"",
+        "definition":"hold, consider, investigate"
+    },
+    {
+        "kanji":"暗",
+        "kana":"",
+        "romanji":"",
+        "definition":"darkness, disappear, shade, informal, grow dark, be blinded"
+    },
+    {
+        "kanji":"案",
+        "kana":"",
+        "romanji":"",
+        "definition":"plan, suggestion, draft, ponder, fear, proposition, idea, expectation, worry, table, bench"
+    },
+    {
+        "kanji":"闇",
+        "kana":"",
+        "romanji":"",
+        "definition":"get dark, gloom, disorder"
+    },
+    {
+        "kanji":"鞍",
+        "kana":"",
+        "romanji":"",
+        "definition":"saddle"
+    },
+    {
+        "kanji":"杏",
+        "kana":"",
+        "romanji":"",
+        "definition":"apricot"
+    },
+    {
+        "kanji":"以",
+        "kana":"",
+        "romanji":"",
+        "definition":"by means of, because, in view of, compared with"
+    },
+    {
+        "kanji":"伊",
+        "kana":"",
+        "romanji":"",
+        "definition":"Italy, that one"
+    },
+    {
+        "kanji":"位",
+        "kana":"",
+        "romanji":"",
+        "definition":"rank, grade, throne, crown, about, some"
+    },
+    {
+        "kanji":"依",
+        "kana":"",
+        "romanji":"",
+        "definition":"reliant, depend on, consequently, therefore, due to"
+    },
+    {
+        "kanji":"偉",
+        "kana":"",
+        "romanji":"",
+        "definition":"admirable, greatness, remarkable, conceited, famous, excellent"
+    },
+    {
+        "kanji":"囲",
+        "kana":"",
+        "romanji":"",
+        "definition":"surround, besiege, store, paling, enclosure, encircle, preserve, keep"
+    },
+    {
+        "kanji":"夷",
+        "kana":"",
+        "romanji":"",
+        "definition":"barbarian, savage, Ainu"
+    },
+    {
+        "kanji":"委",
+        "kana":"",
+        "romanji":"",
+        "definition":"committee, entrust to, leave to, devote, discard"
+    },
+    {
+        "kanji":"威",
+        "kana":"",
+        "romanji":"",
+        "definition":"intimidate, dignity, majesty, menace, threaten"
+    },
+    {
+        "kanji":"尉",
+        "kana":"",
+        "romanji":"",
+        "definition":"military officer, jailer, old man, rank"
+    },
+    {
+        "kanji":"惟",
+        "kana":"",
+        "romanji":"",
+        "definition":"consider, reflect, think"
+    },
+    {
+        "kanji":"意",
+        "kana":"",
+        "romanji":"",
+        "definition":"idea, mind, heart, taste, thought, desire, care, liking"
+    },
+    {
+        "kanji":"慰",
+        "kana":"",
+        "romanji":"",
+        "definition":"consolation, amusement, seduce, cheer, make sport of, comfort, console"
+    },
+    {
+        "kanji":"易",
+        "kana":"",
+        "romanji":"",
+        "definition":"easy, ready to, simple, fortune-telling, divination"
+    },
+    {
+        "kanji":"椅",
+        "kana":"",
+        "romanji":"",
+        "definition":"chair"
+    },
+    {
+        "kanji":"為",
+        "kana":"",
+        "romanji":"",
+        "definition":"do, change, make, benefit, welfare, be of use, reach to, try, practice, cost, serve as, good, advantage, as a result of"
+    },
+    {
+        "kanji":"畏",
+        "kana":"",
+        "romanji":"",
+        "definition":"fear, majestic, graciously, be apprehensive"
+    },
+    {
+        "kanji":"異",
+        "kana":"",
+        "romanji":"",
+        "definition":"uncommon, different, queerness, strangeness, wonderful, curious, unusual"
+    },
+    {
+        "kanji":"移",
+        "kana":"",
+        "romanji":"",
+        "definition":"shift, move, change, drift, catch (cold, fire), pass into"
+    },
+    {
+        "kanji":"維",
+        "kana":"",
+        "romanji":"",
+        "definition":"fiber, tie, rope"
+    },
+    {
+        "kanji":"緯",
+        "kana":"",
+        "romanji":"",
+        "definition":"horizontal, woof, left & right, (parallels of) latitude, prediction"
+    },
+    {
+        "kanji":"胃",
+        "kana":"",
+        "romanji":"",
+        "definition":"stomach, paunch, crop, craw"
+    },
+    {
+        "kanji":"萎",
+        "kana":"",
+        "romanji":"",
+        "definition":"wither, droop, lame"
+    },
+    {
+        "kanji":"衣",
+        "kana":"",
+        "romanji":"",
+        "definition":"garment, clothes, dressing"
+    },
+    {
+        "kanji":"謂",
+        "kana":"",
+        "romanji":"",
+        "definition":"reason, origin, history, oral tradition"
+    },
+    {
+        "kanji":"違",
+        "kana":"",
+        "romanji":"",
+        "definition":"difference, differ"
+    },
+    {
+        "kanji":"遺",
+        "kana":"",
+        "romanji":"",
+        "definition":"bequeath, leave behind, reserve"
+    },
+    {
+        "kanji":"医",
+        "kana":"",
+        "romanji":"",
+        "definition":"doctor, medicine"
+    },
+    {
+        "kanji":"井",
+        "kana":"",
+        "romanji":"",
+        "definition":"well, well crib, town, community"
+    },
+    {
+        "kanji":"亥",
+        "kana":"",
+        "romanji":"",
+        "definition":"sign of the hog, 9-11PM, twelfth sign of the Chinese zodiac"
+    },
+    {
+        "kanji":"域",
+        "kana":"",
+        "romanji":"",
+        "definition":"range, region, limits, stage, level"
+    },
+    {
+        "kanji":"育",
+        "kana":"",
+        "romanji":"",
+        "definition":"bring up, grow up, raise, rear"
+    },
+    {
+        "kanji":"郁",
+        "kana":"",
+        "romanji":"",
+        "definition":"cultural progress, perfume"
+    },
+    {
+        "kanji":"磯",
+        "kana":"",
+        "romanji":"",
+        "definition":"seashore, beach"
+    },
+    {
+        "kanji":"一",
+        "kana":"",
+        "romanji":"",
+        "definition":"one, one radical (no.1)"
+    },
+    {
+        "kanji":"壱",
+        "kana":"",
+        "romanji":"",
+        "definition":"one (in documents)"
+    },
+    {
+        "kanji":"溢",
+        "kana":"",
+        "romanji":"",
+        "definition":"overflow, inundate, spill"
+    },
+    {
+        "kanji":"逸",
+        "kana":"",
+        "romanji":"",
+        "definition":"deviate, idleness, leisure, miss the mark, evade, elude, parry, diverge"
+    },
+    {
+        "kanji":"稲",
+        "kana":"",
+        "romanji":"",
+        "definition":"rice plant"
+    },
+    {
+        "kanji":"茨",
+        "kana":"",
+        "romanji":"",
+        "definition":"briar, thorn"
+    },
+    {
+        "kanji":"芋",
+        "kana":"",
+        "romanji":"",
+        "definition":"potato"
+    },
+    {
+        "kanji":"鰯",
+        "kana":"",
+        "romanji":"",
+        "definition":"sardine, (kokuji)"
+    },
+    {
+        "kanji":"允",
+        "kana":"",
+        "romanji":"",
+        "definition":"license, sincerity, permit"
+    },
+    {
+        "kanji":"印",
+        "kana":"",
+        "romanji":"",
+        "definition":"stamp, seal, mark, imprint, symbol, emblem, trademark, evidence, souvenir, India"
+    },
+    {
+        "kanji":"咽",
+        "kana":"",
+        "romanji":"",
+        "definition":"throat, choked, smothered, stuffy"
+    },
+    {
+        "kanji":"員",
+        "kana":"",
+        "romanji":"",
+        "definition":"employee, member, number, the one in charge"
+    },
+    {
+        "kanji":"因",
+        "kana":"",
+        "romanji":"",
+        "definition":"cause, factor, be associated with, depend on, be limited to"
+    },
+    {
+        "kanji":"姻",
+        "kana":"",
+        "romanji":"",
+        "definition":"matrimony, marry"
+    },
+    {
+        "kanji":"引",
+        "kana":"",
+        "romanji":"",
+        "definition":"pull, tug, jerk, admit, install, quote, refer to"
+    },
+    {
+        "kanji":"飲",
+        "kana":"",
+        "romanji":"",
+        "definition":"drink, smoke, take"
+    },
+    {
+        "kanji":"淫",
+        "kana":"",
+        "romanji":"",
+        "definition":"lewdness, licentiousness"
+    },
+    {
+        "kanji":"胤",
+        "kana":"",
+        "romanji":"",
+        "definition":"descendent, issue, offspring"
+    },
+    {
+        "kanji":"蔭",
+        "kana":"",
+        "romanji":"",
+        "definition":"shade, shadow, backing assistance"
+    }
+]

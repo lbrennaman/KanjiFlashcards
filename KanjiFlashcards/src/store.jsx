@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import kanjiReducer from './reducer';
+import kanjiReducer from './reducers/kanjiList';
+import cardReducer from './reducers/cards';
 
 const store = configureStore({
     reducer: {
-        cards: kanjiReducer
+        kanji: kanjiReducer,
+        cards: cardReducer
     }
 });
 
