@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { useSelector, useDispatch, Provider } from 'react-redux';
-import { randomize, setSize } from './reducers/kanjiList';
+import { randomize, setSize, setDrag } from './reducers/kanjiList';
 import store from './store';
 
 function TextArea(properties) {
@@ -30,6 +30,11 @@ function TextArea(properties) {
   );
 }
 
+// Should probably have a better name
+// This global variable holds the list of current flashcard values (both kanji cards and match cards)
+// Order of values: [kanji, match, kanji, match, ... kanji, match]. Alternates between a kanji and its match
+var values = [];
+
 function FlashCard(properties) {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
   // Get random number on range [min, max]
@@ -43,11 +48,18 @@ function FlashCard(properties) {
   const [fromLeft, updateLeft] = useState(getRandomInt(0, window.innerWidth));
   const [fromBottom, updateBottom] = useState(getRandomInt(0, window.innerHeight));
 
+  // Drag variable from global state
+  const dragValue = useSelector((state) => { return state.kanji.drag });
+  const dispatch = useDispatch();
+
   function handleDrag(event) {
-    console.log("This flashcard was dragged!");
+    //console.log("This flashcard was dragged!");
+
+    // Set the value of the drag global variable to reflect the current character being dragged
+    dispatch(setDrag(properties.value));
   }
 
-  function handleDragover(event) {
+  function handleDragOver(event) {
     event.preventDefault();
     console.log("This flashcard was dragged over! Card: ", properties.value);
   }
@@ -55,68 +67,119 @@ function FlashCard(properties) {
   function handleDrop(event) {
     event.preventDefault();
     console.log("This flashcard was dropped on! Card: ", properties.value);
+
+    // If this card is a match for the card being dragged, use updateIndeces to show that the indeces of the kanji and the match should be removed
+    // properties.update();
+    if (dragValue == properties.match) {
+      console.log("Match! These two cards should be deleted!");
+
+      // Set indeces to the indeces of this flashcard and the matching flashcard
+      let index0;
+      let index1;
+      for (let i = 0; i < values.length; i++) {
+        // If the current value is the value of this card, check for whether the match is back an index or forward an index: set the indeces accordingly
+        if (values[i] == properties.value) {
+          if (i - 1 >= 0) {
+            if (values[i - 1] == properties.match) {
+              index0 = i - 1;
+              index1 = i;
+              properties.update([index0, index1]);
+            }
+          } else if (i + 1 < values.length) {
+            if (values[i + 1] == properties.match) {
+              index0 = i;
+              index1 = i + 1;
+              properties.update([index0, index1]);
+            }
+          }
+        }
+      }
+
+      // Remove indeces from values list
+      values.splice(index0, 1);
+      values.splice(index1 - 1, 1);
+
+      console.log("Updated values: ", values);
+    }
+    
+    // A card is no longer being dragged, so reset the value
+    dispatch(setDrag(null));
   }
 
   return(
     <span className={"p-1 m-0"} style={{position: 'absolute', left: fromLeft + 'px', bottom: fromBottom + 'px', border: '1px solid black'}} 
       draggable
       onDrag={(event) => handleDrag(event)}
-      onDragOver={(event) => handleDrag(event)}
-      onDrop={(event) => handleDrag(event)}>
+      onDragOver={(event) => handleDragOver(event)}
+      onDrop={(event) => handleDrop(event)}>
       {properties.value}
     </span>
   );
 }
 
-class Pair {
-  constructor(first = null, second = null) {
-      this.first = first;
-      this.second = second;
-  }
-
-  getFirst() {
-    return this.first;
-  }
-
-  getSecond() {
-    return this.second;
-  }
-
-  toString() {
-    return("First: " + this.first + " Second: " + this.second);
-  }
-}
-
 function ScatterBoard(properties) {
+  // Get the list of active kanji and their matches from the global state
   const kanjiList = useSelector((state) => { return state.kanji.kanjiList });
   const matchList = useSelector((state) => { return state.kanji.matchList });
 
-  // Pair approach, but this is probably useless since this doesnt provide them with any functionality
-  // to detect if a FlashCard is a match to the other card in the Pair
-  /*
-  let objects = [];
-  for (let i = 0; i < kanjiList.length; i++) {
-    objects.push(
-      new Pair(
-        <FlashCard key={"KANJI CARD: " + i} value={kanjiList[i]} match={matchList[i]}/>, 
-        <FlashCard key={"MATCH CARD: " + i} value={matchList[i]} match={kanjiList[i]}/>
-      )
-    );
+  // Keep track of whether or not this component is initialized or not
+  const [initialized, setInitialized] = useState(false);
+
+  // Upon initialization, create a list to keep track of the values of the current flashcards in play
+  if (initialized) {
+    if (values.length == 0) {
+      for (let i = 0; i < kanjiList.length; i++) {
+        values.push(kanjiList[i]);
+        values.push(matchList[i]);
+      }
+    }
   }
 
-  let cards = [];
-  for (let card of objects) {
-    console.log("Cards: ", card.toString());
-    cards.push(card.getFirst());
-    cards.push(card.getSecond());
-  }
-  */
+  // Keep track of two indeces: the kanji and its match. If these two are not null, remove them from the list of flashcards
+  const [indeces, updateIndeces] = useState([null, null]);
 
-  let cards = [];
-  for (let i = 0; i < kanjiList.length; i++) {
-    cards.push(<FlashCard key={"KANJI CARD: " + i} value={kanjiList[i]} match={matchList[i]}/>);
-    cards.push(<FlashCard key={"MATCH CARD: " + i} value={matchList[i]} match={kanjiList[i]}/>);
-  }
+  // Assemble the list of flashcards based on the kanjiList and matchList
+  const [cards, updateCards] = useState(() => {
+    let cardList = [];
+    for (let i = 0; i < kanjiList.length; i++) {
+      cardList.push(<FlashCard key={"KANJI CARD: " + i} value={kanjiList[i]} match={matchList[i]} update={(value) => {updateIndeces(value)}}/>);
+      cardList.push(<FlashCard key={"MATCH CARD: " + i} value={matchList[i]} match={kanjiList[i]} update={(value) => {updateIndeces(value)}}/>);
+    }
+    return cardList;
+  });
+
+  // Use an effect after re-rendering indeces to check whether or not flashcards should be removed or not
+  useEffect(() => {
+    if (initialized) {
+      if (indeces[0] !== null && indeces[1] !== null) {
+        // Debug
+        console.log("Indeces are not null! Removing flashcards!");
+        console.log("Index[0]: ", indeces[0], " and Index[1]: ", indeces[1]);
+
+        // Remove the flashcards from the list of flashcards and return the array
+        updateCards((previousCards) => {
+          let copy = [];
+
+          // Copy cards until the first index is hit
+          for (let i = 0; i < indeces[0]; i++) {
+            copy.push(previousCards[i]);
+          }
+
+          // Due to how the indeces are set, indeces[0] is always 1 before indeces[1], so increment indeces[0] by 2 to pass both indeces
+          for (let i = indeces[0] + 2; i < previousCards.length; i++) {
+            copy.push(previousCards[i]);
+          }
+
+          // Return the new array of flashcards to display
+          return copy;
+        });
+      } else {
+        console.log("Indeces are null!"); // Debug
+      }
+    } else {
+      setInitialized(true);
+    }
+  }, [indeces]);
 
   return(
     <span>
