@@ -24,7 +24,6 @@ export const kanjiSlice = createSlice({
             state.size = action.payload;
         },
         setDrag: (state, action) => {
-            console.log("Setting drag: ", action.payload);
             state.drag = action.payload;
         }
     }

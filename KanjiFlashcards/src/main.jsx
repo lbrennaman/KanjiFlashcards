@@ -166,6 +166,11 @@ function ScatterBoard(properties) {
   const matchList = useSelector((state) => { return state.kanji.matchList });
   const dispatch = useDispatch();
 
+  // ###################################################################################################################################################
+  // Re-think this function.
+  // Can the cards be constructed with a cardsInPlay array? or is cardsInPlay constructed too late?
+  // ###################################################################################################################################################
+
   // Keep track of whether or not this component is initialized or not
   const [initialized, setInitialized] = useState(false);
 
@@ -226,10 +231,6 @@ function ScatterBoard(properties) {
   useEffect(() => {
     if (initialized) {
       if (indeces[0] !== null && indeces[1] !== null) {
-        // Debug
-        console.log("Indeces are not null! Removing flashcards!");
-        console.log("Index[0]: ", indeces[0], " and Index[1]: ", indeces[1]);
-
         // Remove the flashcards from the list of flashcards and return the array
         updateCards((previousCards) => {
           let copy = [];
