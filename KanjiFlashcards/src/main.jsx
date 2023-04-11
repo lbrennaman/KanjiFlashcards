@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { useSelector, useDispatch, Provider } from 'react-redux';
-import { randomize, setSize, setDrag, setX, setY } from './reducers/kanjiList';
+import { randomize, setSize, setDrag } from './reducers/kanjiList';
+import { setCoordinates } from './reducers/coordinates';
 import store from './store';
 
+// A React component for a standard textarea
 function TextArea(properties) {
   return(
     <form id={"UserInputForm"} className={"p-0 m-0"} style={{height: '100%', width:'100%'}}>
@@ -50,53 +52,34 @@ function FlashCard(properties) {
   const [fromLeft, updateLeft] = useState(getRandomInt(0, window.innerWidth - properties.fontSize)); 
   const [fromTop, updateTop] = useState(getRandomInt((0.05 * window.innerHeight), window.innerHeight - properties.fontSize));
 
-  const x = useSelector((state) => { return state.kanji.x});
-  const y = useSelector((state) => { return state.kanji.y});
+  // (x, y) coordinates of the initial position of the cursor when the left mouse button is pressed down to select a card
+  const x = useSelector((state) => { return state.coordinate.x});
+  const y = useSelector((state) => { return state.coordinate.y});
 
   // Drag variable from global state
   const dragValue = useSelector((state) => { return state.kanji.drag });
   const dispatch = useDispatch();
 
+  // Set the (x,y) coordinates of the cursor when the left mouse button is pressed down to select this card
   function handleMouseDown(event) {
-    console.log("MOUSE DOWN AT X: ", event.clientX, " Y: ", event.clientY);
-    dispatch(setX(event.clientX));
-    dispatch(setY(event.clientY));
+    dispatch(setCoordinates({x: event.clientX, y: event.clientY}));
   }
 
+  // Set the value of the drag global variable to reflect the current character being dragged (only fires once: when drag event starts)
   function handleDragStart(event) {
-    // console.log("This flashcard was dragged!");
-
-    // Set the value of the drag global variable to reflect the current character being dragged
     dispatch(setDrag(properties.value));
   }
 
+  // When the drag event ends, use the final (x, y) coordinates of the mouse cursor to translate the position of the flashcard
   function handleDragEnd(event) {
+    // Get initial bounding rectangle coordinates of flashcard
     let rect = event.target.getBoundingClientRect();
-    console.log("From left: ", fromLeft, " and from top: ", fromTop);
-    console.log("InitialRect Top: ", rect.top, " Left: ", rect.left, " Right: ", rect.right, " Bottom: ", rect.bottom);
-    console.log("Mouse moving: ", event.clientX - x, event.clientY - y);
+
+    // Calculate how far the card should be translated in the x and y directions
     let translate_x = event.clientX - x;
     let translate_y = event.clientY - y;
 
-    // Tranlsation in the x direction: event.clientX - x
-    // Translation in the y direction: event.clientY - y
-
-    // If right bound is still in window in x direction && left bound is still in window in -x direction
-    // If rect.right + translate_x < window.innerWidth && rect.left + translate_x >= 0, 
-    //    updateLeft(fromLeft + translate_x)
-    // Else if rect.right + translate_x >= window.innerWidth, 
-    //    updateLeft(window.innerWidth - (rect.right - rect.left)) // Set the card so that the right edge is on the bound of the window
-    // Else
-    //    updateLeft(0) // Set the card so that the left edge is on the bound of the window
-
-    // If the top bound is still in window in y direction and bottom bound is still in window in -y direction 
-    // If rect.top + translate_y < window.innerHeight && rect.bottom + translate_y >= 0
-    //    updateTop(fromTop + translate_y)
-    // Else if rect.top + translate_y >= window.innerHeight
-    //    updateTop(window.innerHeight - (rect.top - rect.bottom))  // Set the card so that the bottom edge is on the bottom bound of the window
-    // Else
-    //    updateTop((0.05 * window.innerHeight))  // Set the card so that the top edge is at the minimum starting position
-
+    // Ensure translation in the x direction does not push the flashcard off the screen
     if (rect.right + translate_x < window.innerWidth && rect.left + translate_x >= 0) {
       updateLeft(fromLeft + translate_x);
     } else if (rect.right + translate_x >= window.innerWidth) {
@@ -105,44 +88,41 @@ function FlashCard(properties) {
       updateLeft(0);
     }
 
-    if (rect.top + translate_y < window.innerHeight && rect.bottom + translate_y >= 0) {
+    // Ensure translation in the y direction does not push the flashcard off the screen
+    if (rect.bottom + translate_y < window.innerHeight && rect.top + translate_y >= (0.05 * window.innerHeight)) {
       updateTop(fromTop + translate_y);
-    } else if (rect.top + translate_y >= window.innerHeight) {
-      updateTop(window.innerHeight - (rect.top - rect.bottom));
+    } else if (rect.bottom + translate_y >= window.innerHeight) {
+      updateTop(window.innerHeight + (rect.top - rect.bottom));
     } else {
       updateTop((0.05 * window.innerHeight));
     }
 
   }
 
+  // Disable default behavior when dragging over a flashcard
   function handleDragOver(event) {
     event.preventDefault();
-    // console.log("This flashcard was dragged over! Card: ", properties.value);
   }
 
+  // If this card is a match for the card being dragged, use updateIndeces to show that the indeces of the kanji and the match should be removed
   function handleDrop(event) {
     event.preventDefault();
-    // console.log("This flashcard was dropped on! Card: ", properties.value);
 
-    // If this card is a match for the card being dragged, use updateIndeces to show that the indeces of the kanji and the match should be removed
-    // properties.update();
+    // If the cards match, set ScatterBoard indeces hook to the 2 indeces of this values that match this flashcard and the matching flashcard
     if (dragValue == properties.match) {
-      console.log("Match! These two cards should be deleted!");
-
-      // Set indeces to the indeces of this flashcard and the matching flashcard
       let index0;
       let index1;
       for (let i = 0; i < values.array.length; i++) {
         // If the current value is the value of this card, check for whether the match is back an index or forward an index: set the indeces accordingly
         if (values.array[i] == properties.value) {
           if (i - 1 >= 0) {
-            if (values.array[i - 1] == properties.match) {
+            if (values.array[i - 1] == properties.match) {  // Check if its match is one index back
               index0 = i - 1;
               index1 = i;
               properties.update([index0, index1]);
             }
           } else if (i + 1 < values.array.length) {
-            if (values.array[i + 1] == properties.match) {
+            if (values.array[i + 1] == properties.match) { // Check if its match is one index forward
               index0 = i;
               index1 = i + 1;
               properties.update([index0, index1]);
@@ -154,8 +134,6 @@ function FlashCard(properties) {
       // Remove indeces from values list
       values.array.splice(index0, 1);
       values.array.splice(index1 - 1, 1);
-
-      console.log("Updated values: ", values);
     }
     
     // A card is no longer being dragged, so reset the value
@@ -192,8 +170,12 @@ function ScatterBoard(properties) {
   const [initialized, setInitialized] = useState(false);
 
   // Upon initialization, create a list to keep track of the values of the current flashcards in play
+  // Cannot use a redux global state for values since dispatch wouldn't be called from an event trigger (breaks application by causing infinite re-renders)
   if (initialized) {
     if (values.reset === true) {
+      if (values.array.length > 0) {
+        values.array = [];
+      }
       for (let i = 0; i < kanjiList.length; i++) {
         values.array.push(kanjiList[i]);
         values.array.push(matchList[i]);
@@ -204,7 +186,7 @@ function ScatterBoard(properties) {
       // Debug
       // Activates everytime component re-renders due to values.reset being set to false on initial render
       // So re-renders every render after initial render
-      console.log("SHOW ME THE VALUES: ", values.array);
+      // console.log("SHOW ME THE VALUES: ", values.array);
       if (values.array.length == 0 && answer === true) {
         answer = confirm("Set completed! Reset flashcards?");
       }
@@ -317,9 +299,14 @@ function MatchSelect(properties) {
 }
 
 function ScatterButton(properties) {
+  function handleButton(event) {
+    console.log("Function called!");
+    values.reset = true;
+  }
+
   return(
     <span className={"btn-group p-0 m-0"} role={"group"} style={{height: '100%'}}> 
-      <button className={"btn btn-primary"}>
+      <button className={"btn btn-primary"} onClick={(event) => {handleButton(event)}}>
         {"Scatter"}
       </button>        
     </span>

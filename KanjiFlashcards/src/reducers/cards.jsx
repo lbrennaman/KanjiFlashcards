@@ -3,48 +3,43 @@ import { createSlice } from '@reduxjs/toolkit';
 export const cardSlice = createSlice({
     name: 'cards',
     initialState: { 
-        kanjiCards: [],
-        matchCards: []
+        inplay: [],
+        reset: true,
+        response: false
     },
     reducers: {
-        addKanjiCard: (state, action) => {
-            console.log("Action akc: ", action);
-            console.log("Adding kanji card: ", action.payload);
-            state.kanjiCards.push(action.payload);
-        },
-        addMatchCard: (state, action) => {
-            console.log("Action amc: ", action);
-            console.log("Adding match card: ", action.payload);
-            state.matchCards.push(action.payload);
-        },
-        resetKanjiCards: (state, action) => {
-            console.log("Resetting kanji cards");
-            state.kanjiCards = [];
-        },
-        resetMatchCards: (state, action) => {
-            console.log("Resetting match cards");
-            state.matchCards = [];
-        },
-        removeKanjiCard: (state, action) => {
-            let array = [];
-            for (let card of state.kanjiCards) {
-                if (card != action.payload) {
-                    array.push(card);
+        handleCardsInPlay: (state, action) => {
+            console.log("Handling cards in play!");
+            if (state.reset === true) {
+                if (state.inplay.length > 0) {
+                    state.inplay = [];
+                }
+                for (let i = 0; i < action.payload.kanji.length; i++) {
+                    state.inplay.push(action.payload.kanji[i]);
+                    state.inplay.push(action.payload.match[i]);
+                }
+                state.reset = false;
+                state.response = true;
+            } else {
+                if (state.inplay.length == 0 && state.response === true) {
+                    state.response = confirm("Set completed! Reset flashcards?");
                 }
             }
-            state.kanjiCards = array;
-        },
-        removeMatchCard: (state, action) => {
-            let array = [];
-            for (let card of state.matchCards) {
-                if (card != action.payload) {
-                    array.push(card);
-                }
+            console.log("Logging elements: \n-------------------");
+            for (let element of state.inplay) {
+                console.log("Element: ", element);
             }
-            state.matchCards = array;
+            console.log();
+        },
+        removeIndeces: (state, action) => {
+            state.inplay.splice(action.payload.i0, 1);
+            state.inplay.splice(action.payload.i1 - 1, 1);
+        },
+        forceReset: (state) => {
+            state.reset = true;
         }
     }
 });
 
-export const { addKanjiCard, addMatchCard, resetKanjiCards, resetMatchCards, removeKanjiCard, removeMatchCard } = cardSlice.actions;
+export const { handleCardsInPlay, removeIndeces, forceReset } = cardSlice.actions;
 export default cardSlice.reducer;
