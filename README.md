@@ -1,15 +1,18 @@
 # KanjiFlashcards
+A flashcard application for Japanese kanji.
+
+Current branch: implementation
 
 ## Progress Report/Changelog
 4/12/23
 Implemented:
  - Fixed method of tracking current cards in play by adding a Redux state called "cards" to remember the values of the FlashCard components in play.
  - Changed order of initialization so that lists can be initialized dynamically at the start of the application. Order of initialization:
- - - MainView initializes kanjiList and matchList
- - - MainView initializes ScatterBoard
- - - ScatterBoard initializes cardInPlay
- - - ScatterBoard initializes cards (FlashCards)
- - - FlashCards are dynamically created one by one, each with a random position on the ScatterBoard
+   - MainView initializes kanjiList and matchList
+   - MainView initializes ScatterBoard
+   - ScatterBoard initializes cardInPlay
+   - ScatterBoard initializes cards (FlashCards)
+   - FlashCards are dynamically created one by one, each with a random position on the ScatterBoard
  - Made it so that the ScatterButton is capable of resetting the FlashCards on the board. 
    (Cannot shuffle positions while there are still cards in play; this functionality may be implemented in the future)
 
