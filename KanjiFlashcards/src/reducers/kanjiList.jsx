@@ -3,25 +3,44 @@ import { createSlice } from '@reduxjs/toolkit';
 export const kanjiSlice = createSlice({
     name: 'kanji',
     initialState: { 
-        size: 1,
-        kanjiList: ["我", "A", "B"],
-        matchList: ["がのわとわれとわが", "A", "B"],
-        romanjiList: ["ga の wa と ware と waga"],
-        definitionList: ["I, me"],
+        size: 5,
+        kanjiList: [],
+        matchList: [],
         drag: null
     },
     reducers: {
-        randomize: (state) => {
-            // Depending on state.size, read in a number of random kanji, their kana, their romanji, and their definitions
+        setLists: (state, action) => {
+            // Clear lists first
+            state.kanjiList = [];
+            state.matchList = [];
+
+            // Fill kanjiList with TODO: random kanji
             for (let i = 0; i < state.size; i++) {
-                console.log("TODO: push random kanji/kana/romanji/definition to respective array[" + i + "].");
+                state.kanjiList.push(action.payload.row[i].kanji);
             }
 
-            console.log("TODO: set each list to these new lists.");
-        },
-        setSize: (state, action) => {
-            console.log("Setting size of list to: ", action.payload);
-            state.size = action.payload;
+            // Fill matchList depending on the type of card to match (TODO: as kanji is randomized, must match indeces used for random kanji)
+            if (action.payload.type === "音読み") {
+                for (let i = 0; i < state.size; i++) {
+                    state.matchList.push(action.payload.row[i].音読み);
+                }
+            } else if (action.payload.type === "訓読み") {
+                for (let i = 0; i < state.size; i++) {
+                    state.matchList.push(action.payload.row[i].訓読み);
+                }
+            } else if (action.payload.type === "kana") {
+                for (let i = 0; i < state.size; i++) {
+                    state.matchList.push(action.payload.row[i].kana);
+                }
+            } else if (action.payload.type === "romanji") {
+                for (let i = 0; i < state.size; i++) {
+                    state.matchList.push(action.payload.row[i].romanji);
+                }
+            } else {
+                for (let i = 0; i < state.size; i++) {
+                    state.matchList.push(action.payload.row[i].definition);
+                }
+            }
         },
         setDrag: (state, action) => {
             state.drag = action.payload;
@@ -29,5 +48,5 @@ export const kanjiSlice = createSlice({
     }
 });
 
-export const { randomize, setSize, setDrag } = kanjiSlice.actions;
+export const { setLists, setDrag } = kanjiSlice.actions;
 export default kanjiSlice.reducer;

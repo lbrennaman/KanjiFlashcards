@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
+import RowObject from './kanji/rows';
+
 import { useSelector, useDispatch, Provider } from 'react-redux';
-import { randomize, setSize, setDrag } from './reducers/kanjiList';
+import { setLists, setDrag } from './reducers/kanjiList';
+import { handleCardsInPlay, removeIndeces } from './reducers/cards';
 import { setCoordinates } from './reducers/coordinates';
 import store from './store';
 
@@ -32,33 +35,24 @@ function TextArea(properties) {
   );
 }
 
-// Should probably have a better name
-// This global variable holds the list of current flashcard values (both kanji cards and match cards)
-// Order of values: [kanji, match, kanji, match, ... kanji, match]. Alternates between a kanji and its match
-var values = {array: [], reset: true};
-var answer = false;
-
 function FlashCard(properties) {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-  // Get random number on range [min, max]
+  // React pure hook variables
+  const [fromLeft, updateLeft] = useState(getRandomInt(0, window.innerWidth - (2 * properties.fontSize)));                          // Set random distance from top
+  const [fromTop, updateTop] = useState(getRandomInt((0.05 * window.innerHeight), window.innerHeight - (2 * properties.fontSize))); // Set random distance from left
+
+  // Redux global variables
+  const cardsInPlay = useSelector((state) => { return state.cards.inplay });  // cardsInPlay: keep track of the value of each FlashCard in play
+  const x = useSelector((state) => { return state.coordinate.x});             // x: keep track of the latest mouse click's x coordinate
+  const y = useSelector((state) => { return state.coordinate.y});             // y: keep track of the latest mouse click's y coordinate
+  const dragValue = useSelector((state) => { return state.kanji.drag });      // dragValue: keep track of the value of the FlashCard being dragged
+  const dispatch = useDispatch();
+
+  // Get random integer on range [min, max]
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
-  // Save coordinates to this FlashCard's state locally using useState()
-  // Subtract pixel font size from max width and height to ensure flashcard appears in window
-  const [fromLeft, updateLeft] = useState(getRandomInt(0, window.innerWidth - properties.fontSize)); 
-  const [fromTop, updateTop] = useState(getRandomInt((0.05 * window.innerHeight), window.innerHeight - properties.fontSize));
-
-  // (x, y) coordinates of the initial position of the cursor when the left mouse button is pressed down to select a card
-  const x = useSelector((state) => { return state.coordinate.x});
-  const y = useSelector((state) => { return state.coordinate.y});
-
-  // Drag variable from global state
-  const dragValue = useSelector((state) => { return state.kanji.drag });
-  const dispatch = useDispatch();
 
   // Set the (x,y) coordinates of the cursor when the left mouse button is pressed down to select this card
   function handleMouseDown(event) {
@@ -108,40 +102,43 @@ function FlashCard(properties) {
   function handleDrop(event) {
     event.preventDefault();
 
-    // If the cards match, set ScatterBoard indeces hook to the 2 indeces of this values that match this flashcard and the matching flashcard
+    // Remove the two cards from cardsInPlay
     if (dragValue == properties.match) {
       let index0;
       let index1;
-      for (let i = 0; i < values.array.length; i++) {
+      for (let i = 0; i < cardsInPlay.length; i++) {
         // If the current value is the value of this card, check for whether the match is back an index or forward an index: set the indeces accordingly
-        if (values.array[i] == properties.value) {
-          if (i - 1 >= 0) {
-            if (values.array[i - 1] == properties.match) {  // Check if its match is one index back
-              index0 = i - 1;
-              index1 = i;
-              properties.update([index0, index1]);
+        if (cardsInPlay[i] == properties.value) {
+          if (properties.type === "kanji") {
+            if (i + 1 < cardsInPlay.length) {
+              if (cardsInPlay[i + 1] == properties.match) { // Check if its match is one index forward
+                index0 = i;
+                index1 = i + 1;
+              }
             }
-          } else if (i + 1 < values.array.length) {
-            if (values.array[i + 1] == properties.match) { // Check if its match is one index forward
-              index0 = i;
-              index1 = i + 1;
-              properties.update([index0, index1]);
+          } else {
+            if (i - 1 >= 0) {
+              if (cardsInPlay[i - 1] == properties.match) {  // Check if its match is one index back
+                index0 = i - 1;
+                index1 = i;
+              }
             }
           }
         }
       }
 
-      // Remove indeces from values list
-      values.array.splice(index0, 1);
-      values.array.splice(index1 - 1, 1);
+      if (index0 !== undefined && index1 !== undefined) {
+        properties.update([index0, index1]);
+        dispatch(removeIndeces({i0: index0, i1: index1}));
+      }
     }
-    
+
     // A card is no longer being dragged, so reset the value
     dispatch(setDrag(null));
   }
 
   return(
-    <span className={"border border-2 rounded-2 p-1 m-0"} 
+    <span className={"border border-2 rounded-2 p-1 m-0 bg-dark text-white"} 
       style={{
         position: 'absolute', 
         left: fromLeft + 'px', 
@@ -161,100 +158,87 @@ function FlashCard(properties) {
 }
 
 function ScatterBoard(properties) {
-  // Get the list of active kanji and their matches from the global state
-  const kanjiList = useSelector((state) => { return state.kanji.kanjiList });
-  const matchList = useSelector((state) => { return state.kanji.matchList });
+  // Redux global variables
+  const kanjiList = useSelector((state) => { return state.kanji.kanjiList }); // kanjiList: current list of kanji
+  const matchList = useSelector((state) => { return state.kanji.matchList }); // matchList: current list of string that matches a respective kanji in kanjiList
+  const cardsInPlay = useSelector((state) => { return state.cards.inplay });  // cardsInPlay: tracks the "value" of all FlashCards in play
   const dispatch = useDispatch();
 
-  // ###################################################################################################################################################
-  // Re-think this function.
-  // Can the cards be constructed with a cardsInPlay array? or is cardsInPlay constructed too late?
-  // ###################################################################################################################################################
+  // React pure hooks
+  const [initialized, setInitialized] = useState(false);  // initialized: Boolean that describes whether this component is initialized or not 
+  const [indeces, setIndeces] = useState([null, null]);   // indeces: a pair denoting the indeces at which to remove a kanji and its match from the list of cards
+  const [cards, updateCards] = useState([]);              // cards: the actual list of FlashCard components
 
-  // Keep track of whether or not this component is initialized or not
-  const [initialized, setInitialized] = useState(false);
-
-  // Upon initialization, create a list to keep track of the values of the current flashcards in play
-  // Cannot use a redux global state for values since dispatch wouldn't be called from an event trigger (breaks application by causing infinite re-renders)
-  if (initialized) {
-    if (values.reset === true) {
-      if (values.array.length > 0) {
-        values.array = [];
-      }
-      for (let i = 0; i < kanjiList.length; i++) {
-        values.array.push(kanjiList[i]);
-        values.array.push(matchList[i]);
-      }
-      values.reset = false;
-      answer = true;
-    } else {
-      // Debug
-      // Activates everytime component re-renders due to values.reset being set to false on initial render
-      // So re-renders every render after initial render
-      // console.log("SHOW ME THE VALUES: ", values.array);
-      if (values.array.length == 0 && answer === true) {
-        answer = confirm("Set completed! Reset flashcards?");
-      }
-    }
-  }
-
-  // Keep track of two indeces: the kanji and its match. If these two are not null, remove them from the list of flashcards
-  const [indeces, updateIndeces] = useState([null, null]);
-
-  // Assemble the list of flashcards based on the kanjiList and matchList
-  const [cards, updateCards] = useState(() => {
-    let cardList = [];
-    for (let i = 0; i < kanjiList.length; i++) {
-      cardList.push(
-        <FlashCard 
-          key={"KANJI CARD: " + i} 
-          value={kanjiList[i]} 
-          match={matchList[i]} 
-          update={(value) => {updateIndeces(value)}}
-          fontSize={48}
-        />
-      );
-      cardList.push(
-        <FlashCard 
-          key={"MATCH CARD: " + i} 
-          value={matchList[i]} 
-          match={kanjiList[i]} 
-          update={(value) => {updateIndeces(value)}}
-          fontSize={24}
-        />
-      );
-    }
-    return cardList;
-  });
-
-  // Use an effect after re-rendering indeces to check whether or not flashcards should be removed or not
+  // Upon initialization of component, set initialized to true
   useEffect(() => {
-    if (initialized) {
-      if (indeces[0] !== null && indeces[1] !== null) {
-        // Remove the flashcards from the list of flashcards and return the array
-        updateCards((previousCards) => {
-          let copy = [];
-
-          // Copy cards until the first index is hit
-          for (let i = 0; i < indeces[0]; i++) {
-            copy.push(previousCards[i]);
-          }
-
-          // Due to how the indeces are set, indeces[0] is always 1 before indeces[1], so increment indeces[0] by 2 to pass both indeces
-          for (let i = indeces[0] + 2; i < previousCards.length; i++) {
-            copy.push(previousCards[i]);
-          }
-
-          // Return the new array of flashcards to display
-          return copy;
-        });
-      } else {
-        console.log("Indeces are null!"); // Debug
-      }
-    } else {
+    if (!initialized) {
       setInitialized(true);
     }
-  }, [indeces]);
+  }, []);
+
+  // When "initialized" changes to reflect that this component is initialized, handleCardsInPlay (which sets cardsInPlay)
+  useEffect(() => {
+    if (initialized) {
+      dispatch(handleCardsInPlay({kanji: kanjiList, match: matchList}));
+    }
+  }, [initialized]);
+
+  // When cardsInPlay is changed, update the list of cards to match the cardsInPlay
+  useEffect(() => {
+    if (initialized) {
+
+      // If two cards were removed from cardsInPlay, update cards to match the cardsInPlay
+      if (cards.length - 2 == cardsInPlay.length) {
+        updateCards((previousCards) => {
+          let array = [];
+          for (let i = 0; i < indeces[0]; i++) {
+            array.push(previousCards[i]);
+          }
+          for (let i = indeces[0] + 2; i < cards.length; i++) {
+            array.push(previousCards[i]);
+          }
+          return array;
+        });
+        
+        // If this removal removes all cards in "cards", then handleCardsInPlay to ask about resetting
+        if (cards.length - 2 == 0) {
+          let response = confirm("Completed set! Reset flashcards by pressing OK, or press CANCEL, select new kanji from the nav menu, and press scatter.");
+          if (response) {
+            dispatch(handleCardsInPlay({kanji: kanjiList, match: matchList}));
+          }
+        }
+      } else { // Otherwise there are no cards, so initialize cards
+        // In this case, cards must not be initialized
+        let array = [];
+        for (let i = 0; i < cardsInPlay.length; i++) {
+          if (i % 2 == 0) {
+            array.push(
+              <FlashCard 
+                key={"KANJI " + cardsInPlay[i] + " #" + i} 
+                value={cardsInPlay[i]} 
+                match={cardsInPlay[i+1]}
+                type={"kanji"} 
+                fontSize={48} 
+                update={(array) => setIndeces(array)}
+              />
+            );
+          } else {
+            array.push(
+              <FlashCard
+                key={"MATCH " + cardsInPlay[i] + " #" + i}  
+                value={cardsInPlay[i]} 
+                match={cardsInPlay[i-1]}
+                type={"match"} 
+                fontSize={24} 
+                update={(array) => setIndeces(array)}
+              />
+            );
+          }
+        }
+        updateCards(array);
+      }
+    }
+  }, [cardsInPlay]);
 
   return(
     <span>
@@ -264,6 +248,15 @@ function ScatterBoard(properties) {
 }
 
 function KanjiSelect(properties){
+  /*
+  TODO: The vertical dropdown should show all possible rows of kanji to choose from (currently only row 16)
+        Hovering over a row should have a side dropdown showing all kanji in that row. All of those kanji should have select checkmarks.
+        All kanji that are selected, regardless of row, should be put into a global "selected" variable and have the possibility
+        of appearing as a FlashCard on the ScatterBoard.
+
+        Rows themselves should also have a select checkmark. Selecting a row should select all kanji in the row and deselecting a row should deselect
+        all kanji in that row.
+  */
   return(
     <span id={"ToolBar Nav"} className={"dropdown-center"} data-bs-theme={"dark"} style={{height: '100%'}}>
       <button type={"button"} className={"btn btn-primary dropdown-toggle"} data-bs-toggle={"dropdown"} aria-expanded={"false"} data-bs-auto-close={"outside"}>
@@ -284,8 +277,17 @@ function KanjiSelect(properties){
 }
 
 function MatchSelect(properties) {
+  /*
+  TODO: on button press, a button should become disabled and set a global "type" variable to the respective type (as shown on the button)
+  */
   return(
     <span className={"btn-group p-0 m-0"} role={"group"} style={{height: '100%'}}> 
+      <button className={"btn btn-primary"}>
+        {"音読み"}
+      </button>
+      <button className={"btn btn-primary"}>
+        {"訓読み"}
+      </button>
       <button className={"btn btn-primary"}>
         {"Kana"}
       </button>    
@@ -300,9 +302,16 @@ function MatchSelect(properties) {
 }
 
 function ScatterButton(properties) {
+  // Redux global variables
+  const kanjiList = useSelector((state) => { return state.kanji.kanjiList }); // kanjiList: current list of kanji
+  const matchList = useSelector((state) => { return state.kanji.matchList }); // matchList: current list of string that matches a respective kanji in kanjiList
+  const dispatch = useDispatch();
+
+  // handleButton function: upon pressing the ScatterButton, forceReset() and handleCardsInPlay() to refresh cardsInPlay using the current kanjiList and matchList
   function handleButton(event) {
-    console.log("Function called!");
-    values.reset = true;
+    dispatch(handleCardsInPlay({kanji: kanjiList, match: matchList}));
+
+    // Possibly: compare cardsInPlay after supposedly resetting. If no change, randomize positions of cards. How can that be done from here?
   }
 
   return(
@@ -315,6 +324,12 @@ function ScatterButton(properties) {
 }
 
 function NumberSelect(properties) {
+  // React pure hook variable and update function to store the current value of the TextArea
+
+  // TODO
+  // Button function to handle button press
+  // onPress => dispatch(setSize([above stated hook variable])) to attempt to set the size to the current value of the TextArea
+  // TextArea onKeyDown should only allow integers 0-9 to be input as well as backspace
   return(
     <span className={"d-flex p-0 m-0"} style={{height: '100%'}}>
       <TextArea/>
@@ -338,6 +353,32 @@ function ToolBar(properties) {
 }
 
 function MainView(properties) {
+  // React pure hooks and Redux dispatch
+  const [initialized, setInitialized] = useState(false);  // initialized: keep track of whether this component is initialized or not
+  const [scatterBoard, setScatterBoard] = useState(null); // scatterBoard: manually render the ScatterBoard to control when it renders initially
+  const dispatch = useDispatch();
+
+  // Upon initialization of component, set initialized to true
+  useEffect(() => {
+    if (!initialized) {
+      setInitialized(true);
+    }
+  }, []);
+
+  // When initialized changes to reflect that this component is initialized, dispatch setLists and initialize ScatterBoard
+  useEffect(() => {
+    if (initialized) {
+      // Initialize kanjiList and matchList with row16 kanji as the default row and kana as the default match type
+      dispatch(setLists({
+        type: "kana", 
+        row: RowObject.row16.array
+      }));
+
+      // Initialize the ScatterBoard now so that kanjiList and matchList are initialized before the ScatterBoard
+      setScatterBoard(<ScatterBoard/>);
+    }
+  }, [initialized]);
+
   // View:
   // Create a top toolbar that contains: top left dropdown menu for page navigation
   //  - Page navigation should include a way to choose SHIFT-JIS rows to use as well as their individual kanji
@@ -353,7 +394,7 @@ function MainView(properties) {
       </div>
       <div id={"MainViewBottomRow"} className={"row p-0 m-0"} style={{height: '95%', width: '100%'}}>
         <div id={"MainViewScatterZone Container"} className={"container-fluid p-0 m-0"} style={{height: '100%', width: '100%'}}>
-          <ScatterBoard/>
+          {scatterBoard}
         </div>
       </div>
     </div>
