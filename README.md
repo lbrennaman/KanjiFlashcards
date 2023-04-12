@@ -4,10 +4,8 @@ A flashcard application for Japanese kanji.
 Current branch: implementation
 
 Most recent picture (4/12/23) 
-/*
  * Note that the kana option shows my own way of remembering the on-yomi and kun-yomi of a kanji by combining them into one long "name."
  * Multiple on-yomi/kun-yomi readings are separated by と, and on-yomi and kun-yomi readings are separated by の.
- */
 ![Alt text. Picture should be here...](./KanjiFlashcards/public/kanjiFlashcardScreenshot_4-12-23.png "Most recent picture 4/12/23")
 
 ## Progress Report/Changelog
