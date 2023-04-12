@@ -1,0 +1,43 @@
+// Unicode encoding for kanji: SHIFT-JIS, also known as Microsoft code page 932 (cp932)
+// https://en.wikipedia.org/wiki/Japanese_language_and_computers
+// Use JIS x 208 https://en.wikipedia.org/wiki/JIS_X_0208
+
+// Contains 6,170 kanji https://en.wiktionary.org/wiki/Appendix:Japanese_kanji_by_JIS_X_0208_kuten_code
+
+// Windows code page identifiers (windows-932): https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers
+// Windows code page 932? https://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WindowsBestFit/
+
+// ALL POSSIBLE CODES
+
+// Row 1 and 2:
+    18 descriptor symbols,
+    10 things that follow kana or kanji,
+    22 bracket symbols,
+    45 mathematical symbols,
+    32 unit symbols
+
+// Row 3:
+    digits 0-9,
+    uppercase and lowercase english alphabet (52 characters)
+
+// Row 4:
+    Hiragana (48 unvoiced kana, 20 voiced, 5 semi-voiced, 10 small kana = total of 83 characters)
+
+// Row 5:
+    Katakana (86 characters [hiragana equivalent + small ka, ke + vu])
+
+// Row 6:
+    Uppercase and lowercase Greek alphabet (48)
+
+// Row 7:
+    Cyrillic letters: 33 letters of the Russian alphabet in uppercase and lowercase (66)
+
+// Row 8:
+    Box drawing characters: 32
+
+// NOW FOR THE KANJI
+// Row 16 - 47:
+    Dai ichi suijun: 2965
+
+// Row 48 - 84:
+    Dai ni suijun: 3390
