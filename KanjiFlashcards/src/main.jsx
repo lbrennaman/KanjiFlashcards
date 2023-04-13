@@ -4,17 +4,34 @@ import ReactDOM from 'react-dom/client';
 import RowObject from './kanji/rows';
 
 import { useSelector, useDispatch, Provider } from 'react-redux';
-import { setLists, setDrag } from './reducers/kanjiList';
+import { setLists, setSize, setType, setDrag } from './reducers/kanjiList';
 import { handleCardsInPlay, removeIndeces } from './reducers/cards';
 import { setCoordinates } from './reducers/coordinates';
 import store from './store';
 
 // A React component for a standard textarea
 function TextArea(properties) {
+  function handleKeyDown(event, value, update) {
+    if (event.key >= 0 && event.key <= 9) {
+      // TODO: if value.length < limit.length, then update value
+      update(value + event.key);
+    } else if (event.key === 'Backspace') {
+      update((previous) => {
+        let string = "";
+        for (let i = 0; i < previous.length - 1; i++) {
+          string += previous[i];
+        }
+        return string;
+      });
+    } else {}
+  }
+
   return(
     <form id={"UserInputForm"} className={"p-0 m-0"} style={{height: '100%', width:'100%'}}>
       <textarea id={"UserInputTextArea"} className={"p-0 m-0"}
           value={properties.value}
+          onInput={(event) => { return null }}
+          onKeyDown={(event) => handleKeyDown(event, properties.value, properties.update)}
           style={{
             height: '100%', 
             width:'100%', 
@@ -240,6 +257,14 @@ function ScatterBoard(properties) {
     }
   }, [cardsInPlay]);
 
+  // Handle the change of cardsInPlay due to a change in kanjiList and/or matchList
+  useEffect(() => {
+    // Reset the cards that are visible
+    if (initialized) {
+      dispatch(handleCardsInPlay({kanji: kanjiList, match: matchList}));
+    }
+  }, [kanjiList, matchList]);
+
   return(
     <span>
       {cards}
@@ -277,24 +302,36 @@ function KanjiSelect(properties){
 }
 
 function MatchSelect(properties) {
-  /*
-  TODO: on button press, a button should become disabled and set a global "type" variable to the respective type (as shown on the button)
-  */
+  // Redux global variables
+  const dispatch = useDispatch();
+
+  // Handle a button press by setting the global match "type" to that of the button that was pressed
+  function handleButton(event, type) {
+    // Change the type to that of the button that triggered this event
+    dispatch(setType(type));
+
+    // Reset the lists to adjust for the updated type
+    dispatch(setLists({
+      row: RowObject.row16.array
+    }));
+  }
+
+  // Return the component: a span with multiple buttons
   return(
     <span className={"btn-group p-0 m-0"} role={"group"} style={{height: '100%'}}> 
-      <button className={"btn btn-primary"}>
+      <button className={"btn btn-primary"} onClick={(event) => handleButton(event, "音読み")}>
         {"音読み"}
       </button>
-      <button className={"btn btn-primary"}>
+      <button className={"btn btn-primary"} onClick={(event) => handleButton(event, "訓読み")}>
         {"訓読み"}
       </button>
-      <button className={"btn btn-primary"}>
+      <button className={"btn btn-primary"} onClick={(event) => handleButton(event, "kana")}>
         {"Kana"}
       </button>    
-      <button className={"btn btn-primary"}>
+      <button className={"btn btn-primary"} onClick={(event) => handleButton(event, "romanji")}>
         {"Romanji"}
       </button> 
-      <button className={"btn btn-primary"}>
+      <button className={"btn btn-primary"} onClick={(event) => handleButton(event, "definition")}>
         {"Definition"}
       </button>       
     </span>
@@ -324,16 +361,30 @@ function ScatterButton(properties) {
 }
 
 function NumberSelect(properties) {
-  // React pure hook variable and update function to store the current value of the TextArea
+  // Redux global state variables
+  const size = useSelector((state) => { return state.kanji.size });
 
-  // TODO
-  // Button function to handle button press
-  // onPress => dispatch(setSize([above stated hook variable])) to attempt to set the size to the current value of the TextArea
-  // TextArea onKeyDown should only allow integers 0-9 to be input as well as backspace
+  // React pure hook variable and update function to store the current value of the TextArea
+  // Possible TODO: change this to a Redux global state variable so that value and updateValue don't have to be passed as properties
+  const [value, updateValue] = useState(size);
+
+  // Dispatch
+  const dispatch = useDispatch();
+
+  function handleButton(event) {
+    // Reset the size of the list of FlashCards
+    dispatch(setSize(Number(value)));
+
+    // Reset the lists to adjust for the updated size
+    dispatch(setLists({
+      row: RowObject.row16.array
+    }));
+  }
+
   return(
     <span className={"d-flex p-0 m-0"} style={{height: '100%'}}>
-      <TextArea/>
-      <button className={"btn btn-outline-success"}>{"/Limit"}</button>
+      <TextArea value={value} update={updateValue}/>
+      <button className={"btn btn-outline-success"} onClick={(event) => handleButton(event)}>{"/" + "TODO"}</button>
     </span>
   );
 }
