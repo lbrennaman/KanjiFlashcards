@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          cache-dependency-path: ./package-lock.json
+          cache-dependency-path: KanjiFlashcards/package-lock.json
       - name: Install dependencies
         run: npm install
         working-directory: KanjiFlashcards/
@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload dist repository
-          path: './dist'
+          path: 'KanjiFlashcards/dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
