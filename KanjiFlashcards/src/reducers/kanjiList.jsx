@@ -4,6 +4,7 @@ export const kanjiSlice = createSlice({
     name: 'kanji',
     initialState: { 
         size: 5,
+        type: "kana",
         kanjiList: [],
         matchList: [],
         drag: null
@@ -20,19 +21,19 @@ export const kanjiSlice = createSlice({
             }
 
             // Fill matchList depending on the type of card to match (TODO: as kanji is randomized, must match indeces used for random kanji)
-            if (action.payload.type === "音読み") {
+            if (state.type === "音読み") {
                 for (let i = 0; i < state.size; i++) {
                     state.matchList.push(action.payload.row[i].音読み);
                 }
-            } else if (action.payload.type === "訓読み") {
+            } else if (state.type === "訓読み") {
                 for (let i = 0; i < state.size; i++) {
                     state.matchList.push(action.payload.row[i].訓読み);
                 }
-            } else if (action.payload.type === "kana") {
+            } else if (state.type === "kana") {
                 for (let i = 0; i < state.size; i++) {
                     state.matchList.push(action.payload.row[i].kana);
                 }
-            } else if (action.payload.type === "romanji") {
+            } else if (state.type === "romanji") {
                 for (let i = 0; i < state.size; i++) {
                     state.matchList.push(action.payload.row[i].romanji);
                 }
@@ -42,11 +43,17 @@ export const kanjiSlice = createSlice({
                 }
             }
         },
+        setSize: (state, action) => {
+            state.size = action.payload;
+        },
+        setType: (state, action) => {
+            state.type = action.payload;
+        },
         setDrag: (state, action) => {
             state.drag = action.payload;
         }
     }
 });
 
-export const { setLists, setDrag } = kanjiSlice.actions;
+export const { setLists, setSize, setType, setDrag } = kanjiSlice.actions;
 export default kanjiSlice.reducer;
