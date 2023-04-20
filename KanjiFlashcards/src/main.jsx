@@ -306,6 +306,7 @@ function MatchSelect(properties) {
   const dispatch = useDispatch();
 
   // Handle a button press by setting the global match "type" to that of the button that was pressed
+  // TODO: disable the button that is pressed. If a different button is disabled, re-enable it.
   function handleButton(event, type) {
     // Change the type to that of the button that triggered this event
     dispatch(setType(type));
