@@ -1,7 +1,11 @@
 # KanjiFlashcards
 A flashcard application for Japanese kanji.
 
-Current branch: implementation
+Current branch: main
+
+## Viewing the Website
+The website is currently being hosted by on Github Pages.
+<a href="https://lbrennaman.github.io/KanjiFlashcards">KanjiFlashcards</a>
 
 Most recent picture (4/12/23) 
  * Note that the kana option shows my own way of remembering the on-yomi and kun-yomi of a kanji by combining them into one long "name" for the kanji.
